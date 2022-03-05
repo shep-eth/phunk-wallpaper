@@ -8,7 +8,7 @@ function fetcher(url: string) {
 }
 
 function getApiUrl(id: string) {
-  return `https://nft-api-five.vercel.app/api/metadata?contract_address=0x79fcdef22feed20eddacbb2587640e45491b757f&token_id=${id}`;
+  return `https://nft-api-five.vercel.app/api/metadata?contract_address=0x3acce66cd37518a6d77d9ea3039e00b3a2955460&token_id=${id}`;
 }
 
 function getCanvasSize() {
@@ -38,7 +38,7 @@ const Canvas: FC<{ image: HTMLImageElement }> = ({ image }) => {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     const imageSize = Math.floor((canvas.width * 6) / 7);
-    ctx.drawImage(image, canvas.width - imageSize, canvas.height - imageSize, imageSize, imageSize);
+    ctx.drawImage(image, (canvas.width - imageSize) / 2, canvas.height - imageSize, imageSize, imageSize);
 
     const dataUrl = canvas.toDataURL("image/png");
     setResult(dataUrl);
