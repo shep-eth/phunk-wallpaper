@@ -33,12 +33,12 @@ const Canvas: FC<{ image: HTMLImageElement }> = ({ image }) => {
     const ctx = canvas.getContext("2d")!;
     ctx.drawImage(image, 0, 0);
     const { data: bgColor } = ctx.getImageData(1, 1, 1, 1);
-    const { data: bgColor2 } = ctx.getImageData(100, 100, 1, 1);
+    const { data: bgColor2 } = ctx.getImageData(1, 200, 1, 1);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = `rgb(${bgColor[0]},${bgColor[1]},${bgColor[2]})`;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    const imageSize = bgColor[0] !== bgColor2[0] ? canvas.width : Math.floor((canvas.width * 6) / 7);
+    const imageSize = (bgColor[0] !== bgColor2[0] || bgColor[1] !== bgColor2[1]) ? canvas.width : Math.floor((canvas.width * 6) / 7);
     ctx.drawImage(image, (canvas.width - imageSize) / 2, canvas.height - imageSize, imageSize, imageSize);
 
     const dataUrl = canvas.toDataURL("image/png");
