@@ -8,7 +8,7 @@ function fetcher(url: string) {
 }
 
 function getApiUrl(id: string) {
-  return `https://nft-api-five.vercel.app/api/metadata?contract_address=0x3acce66cd37518a6d77d9ea3039e00b3a2955460&token_id=${id}`;
+  return `https://gateway.pinata.cloud/ipfs/QmcfS3bYBErM2zo3dSRLbFzr2bvitAVJCMh5vmDf3N3B9X/${id}`
 }
 
 function getCanvasSize() {
@@ -33,12 +33,11 @@ const Canvas: FC<{ image: HTMLImageElement }> = ({ image }) => {
     const ctx = canvas.getContext("2d")!;
     ctx.drawImage(image, 0, 0);
     const { data: bgColor } = ctx.getImageData(1, 1, 1, 1);
-    const { data: bgColor2 } = ctx.getImageData(1, 200, 1, 1);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = `rgb(${bgColor[0]},${bgColor[1]},${bgColor[2]})`;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-    const imageSize = (bgColor[0] !== bgColor2[0] || bgColor[1] !== bgColor2[1]) ? canvas.width : Math.floor((canvas.width * 6) / 7);
+    const imageSize = Math.floor((canvas.width * 6) / 7);
     ctx.drawImage(image, (canvas.width - imageSize) / 2, canvas.height - imageSize, imageSize, imageSize);
 
     const dataUrl = canvas.toDataURL("image/png");
@@ -57,10 +56,12 @@ const WallpaperPage: FC = () => {
   const { id } = router.query as { id: string };
   const [image, setImage] = useState<HTMLImageElement | null>(null);
 
-  const { data } = useSWR(id ? getApiUrl(id) : null, fetcher);
+  const {data}= useSWR(id ? getApiUrl(id) : null, fetcher);
+
+console.log(data);
 
   useEffect(() => {
-    if (!data?.image) {
+    if (!data?.image_url) {
       return;
     }
     const img = new Image();
@@ -68,8 +69,8 @@ const WallpaperPage: FC = () => {
       setImage(img);
     };
     img.crossOrigin = "Anonymous";
-    img.src = data.image;
-  }, [data?.image]);
+    img.src = data.image_url;
+  }, [data?.image_url]);
 
   if (!id || !data || !image) {
     return <Loading />;
